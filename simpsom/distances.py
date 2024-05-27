@@ -5,6 +5,8 @@ from typing import Optional
 import numpy as np
 from loguru import logger
 
+import numba as nb
+
 
 class Distance:
     """ Container class for distance functions. """
@@ -13,7 +15,7 @@ class Distance:
         """ Instantiate the Distance class.
 
         Args:
-            xp (numpy or cupy): the numeric labrary to use
+            xp (numpy or cupy): the numeric library to use
                 to calculate distances.
         """
 
@@ -130,8 +132,9 @@ class Distance:
 
         return d.reshape(x.shape[0], w.shape[0] * w.shape[1])
 
+    @nb.njit(parallel=True, fastmath=True)
     def batchpairdist(self, x: np.ndarray, w: np.ndarray, sq: np.ndarray, metric: str) -> np.ndarray:
-        """ Calculates distances betweens points in batches. Two array-like objects
+        """ Calculates distances between points in batches. Two array-like objects
         must be provided, distances will be calculated between all points in the
         first array and all those in the second array.
 
@@ -139,7 +142,7 @@ class Distance:
             a(array): first array.
             b(array): second array.
             metric(string): distance metric.
-                Accepted metrics are euclidean, manhattan, and cosine(default "euclidean").
+                Accepted metrics are euclidean, manhattan, and cosine (default "euclidean").
         Returns:
             d(array or list): the calculated distances.
         """
@@ -157,6 +160,8 @@ class Distance:
                      "\"euclidean\", \"cosine\" and \"manhattan\"")
         sys.exit(1)
 
+    
+    @nb.njit(parallel=True, fastmath=True)
     def pairdist(self, a: np.ndarray, b: np.ndarray, metric: str) -> np.ndarray:
         """ Calculates distances betweens points. Two array-like objects
         must be provided, distances will be calculated between all points in the
