@@ -344,6 +344,27 @@ class SOMNet:
 
         return self.xp.argmin(dists, axis=1)
 
+    def find_2bmu_ix(self, vecs: np.array) -> 'SOMNode':
+        """Find the index of the best 2 matching units (BMUs) for a given list of vectors.
+
+        Args:
+            vec (array or list[lists, ..]): vectors whose distance from the network
+                nodes will be calculated.
+
+        Returns:
+            bmu (SOMNode): The best matching unit node index.
+        """
+
+        dists = self.distance.pairdist(vecs,
+                                       self.xp.array(
+                                           [n.weights for n in self.nodes_list]),
+                                       metric=self.metric)
+        bmu1 = self.xp.argmin(dists, axis=1)
+        dists[bmu1] = 1e10
+        bmu2 = self.xp.argmin(dists, axis=1)
+        return (bmu1, bmu2)
+
+    
     def train(self, train_algo: str = "batch", epochs: int = -1,
               start_learning_rate: float = 0.01, early_stop: str = None,
               early_stop_patience: int = 3, early_stop_tolerance: float = 1e-4, batch_size: int = -1) -> None:
