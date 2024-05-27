@@ -24,7 +24,7 @@ Version 3 is a rewriting focusing on performance.
 
 To install the latest (unreleased) version you can download it from this repository by running 
  
-    git clone https://github.com/fcomitani/simpsom
+    git clone https://github.com/is-mat-tron/simpsom
     cd simpsom
     python setup.py install
 
