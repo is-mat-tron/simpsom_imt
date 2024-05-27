@@ -5,8 +5,6 @@ from typing import Optional
 import numpy as np
 from loguru import logger
 
-import numba as nb
-
 
 class Distance:
     """ Container class for distance functions. """
@@ -21,7 +19,7 @@ class Distance:
 
         self.xp = xp
 
-    @nb.njit(parallel=True, fastmath=True)
+   
     def _euclidean_squared_distance_part(self, x: np.ndarray, w: np.ndarray,
                                          w_flat_sq: Optional[np.ndarray] = None) -> float:
         """ Calculate the partial squared L2 distance.
@@ -41,7 +39,7 @@ class Distance:
         cross_term = self.xp.dot(x, w_flat.T)
         return -2 * cross_term + w_flat_sq.T
 
-    @nb.njit(parallel=True, fastmath=True)
+    
     def _euclidean_squared_distance(self, x: np.ndarray, w: np.ndarray,
                                     w_flat_sq: Optional[np.ndarray] = None) -> float:
         """Calculate the full squared L2 distance.
