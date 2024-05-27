@@ -57,7 +57,6 @@ class Distance:
         x_sq = self.xp.power(x, 2).sum(axis=1, keepdims=True)
         return self._euclidean_squared_distance_part(x, w, w_flat_sq) + x_sq
 
-    @nb.njit(parallel=True, fastmath=True)
     def euclidean_distance(self, x: np.ndarray, w: np.ndarray, w_flat_sq: np.ndarray) -> float:
         """Calculate the L2 distance between two arrays.
 
