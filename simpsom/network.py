@@ -326,7 +326,6 @@ class SOMNet:
         self.learning_rate = self.start_learning_rate * \
                              self.xp.exp(-n_iter / self.epochs)
 
-    @nb.njit(parallel=True, fastmath=True)
     def find_bmu_ix(self, vecs: np.array) -> 'SOMNode':
         """Find the index of the best matching unit (BMU) for a given list of vectors.
 
