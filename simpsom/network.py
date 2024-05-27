@@ -571,6 +571,7 @@ class SOMNet:
                 if ((n_iter+1) < self.epochs):
                     self.save_map(file_name = 'trained_som_' + str(n_iter+1) + 'epoch'+ '.npy')   # Added by I. Matute to save map after each epoch
                 # ===================================================================================================================
+                all_weights = self.xp.array([n.weights for n in self.nodes_list], dtype=self.xp.float32)
                 all_weights = all_weights.reshape(self.width, self.height, self.data.shape[1])
             
 
