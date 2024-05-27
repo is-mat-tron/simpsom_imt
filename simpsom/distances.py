@@ -21,6 +21,7 @@ class Distance:
 
         self.xp = xp
 
+    @nb.njit(parallel=True, fastmath=True)
     def _euclidean_squared_distance_part(self, x: np.ndarray, w: np.ndarray,
                                          w_flat_sq: Optional[np.ndarray] = None) -> float:
         """ Calculate the partial squared L2 distance.
@@ -40,6 +41,7 @@ class Distance:
         cross_term = self.xp.dot(x, w_flat.T)
         return -2 * cross_term + w_flat_sq.T
 
+    @nb.njit(parallel=True, fastmath=True)
     def _euclidean_squared_distance(self, x: np.ndarray, w: np.ndarray,
                                     w_flat_sq: Optional[np.ndarray] = None) -> float:
         """Calculate the full squared L2 distance.
@@ -55,6 +57,7 @@ class Distance:
         x_sq = self.xp.power(x, 2).sum(axis=1, keepdims=True)
         return self._euclidean_squared_distance_part(x, w, w_flat_sq) + x_sq
 
+    @nb.njit(parallel=True, fastmath=True)
     def euclidean_distance(self, x: np.ndarray, w: np.ndarray, w_flat_sq: np.ndarray) -> float:
         """Calculate the L2 distance between two arrays.
 
@@ -132,7 +135,7 @@ class Distance:
 
         return d.reshape(x.shape[0], w.shape[0] * w.shape[1])
 
-    @nb.njit(parallel=True, fastmath=True)
+    
     def batchpairdist(self, x: np.ndarray, w: np.ndarray, sq: np.ndarray, metric: str) -> np.ndarray:
         """ Calculates distances between points in batches. Two array-like objects
         must be provided, distances will be calculated between all points in the
@@ -160,8 +163,7 @@ class Distance:
                      "\"euclidean\", \"cosine\" and \"manhattan\"")
         sys.exit(1)
 
-    
-    @nb.njit(parallel=True, fastmath=True)
+
     def pairdist(self, a: np.ndarray, b: np.ndarray, metric: str) -> np.ndarray:
         """ Calculates distances betweens points. Two array-like objects
         must be provided, distances will be calculated between all points in the
