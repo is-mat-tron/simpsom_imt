@@ -538,7 +538,7 @@ class SOMNet:
                 all_weights = new_weights
 
                 # ===================================================================================================================
-                save_map(file_name = 'trained_som'+'epoch'+ str(epoch) + '.npy')   # Added by I. Matute to save map after each epoch
+                self.save_map(file_name = 'trained_som'+'epoch'+ str(epoch) + '.npy')   # Added by I. Matute to save map after each epoch
                 # ===================================================================================================================
             
 
