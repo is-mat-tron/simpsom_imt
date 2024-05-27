@@ -15,6 +15,8 @@ from simpsom.neighborhoods import Neighborhoods
 from simpsom.plots import plot_map, line_plot, scatter_on_map
 from simpsom.polygons import Squares, Hexagons, Polygon
 
+import numba as nb    # Added by I. Matute (27/05/2024)
+
 
 class SOMNet:
     """ Kohonen SOM Network class. """
@@ -323,6 +325,7 @@ class SOMNet:
         self.learning_rate = self.start_learning_rate * \
                              self.xp.exp(-n_iter / self.epochs)
 
+    @nb.njit(parallel=True, fastmath=True)
     def find_bmu_ix(self, vecs: np.array) -> 'SOMNode':
         """Find the index of the best matching unit (BMU) for a given list of vectors.
 
@@ -490,7 +493,7 @@ class SOMNet:
                 self._update_sigma(n_iter)
                 self._update_learning_rate(n_iter)
 
-                if n_iter % 10 == 0:
+                if n_iter % 2 == 0:
                     logger.debug("Training SOM... {:.2f}%".format(
                         n_iter * 100.0 / self.epochs))
 
@@ -533,6 +536,11 @@ class SOMNet:
                     early_stopper.check_convergence(loss)
 
                 all_weights = new_weights
+
+                # ===================================================================================================================
+                save_map(file_name = 'trained_som'+'epoch'+ str(epoch) + '.npy')   # Added by I. Matute to save map after each epoch
+                # ===================================================================================================================
+            
 
             # Revert to object oriented
             all_weights = all_weights.reshape(self.width * self.height, self.data.shape[1])
