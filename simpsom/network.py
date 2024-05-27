@@ -312,19 +312,13 @@ class SOMNet:
         Args:
             file_name (str): Name of the file where the data will be saved.
         """
-        # Revert to object-oriented  ::::::::::::::::::::::::::::::::::::::::::::::::::
-        all_weights = all_weights.reshape(self.width * self.height, self.data.shape[1])
-        for n_node, node in enumerate(self.nodes_list):
-            node.weights = all_weights[n_node]
-
-        all_weights = all_weights.reshape(self.width, self.height, self.data.shape[1])
 
         weights_array = [[float(self.height)] * self.nodes_list[0].weights.shape[0],
                          [float(self.width)] *
                          self.nodes_list[0].weights.shape[0],
                          [float(self.PBC)] * self.nodes_list[0].weights.shape[0]] + \
                         [self._get(node.weights) for node in self.nodes_list]
-        # ::::::::::::::::::::::::: ::::::::::::::::::::::::::::::::::::::::::::::::::
+        
 
         if not file_name.endswith((".npy")):
             file_name += ".npy"
@@ -506,9 +500,9 @@ class SOMNet:
             neighborhoods = Neighborhoods(self.xp, _xx, _yy, pbc_func_params)
 
             sq_weights = None
-
+            
             for n_iter in range(self.epochs):
-
+        
                 if self.metric in ["euclidean", "cosine"]:
                     sq_weights = (self.xp.power(all_weights.reshape(-1, all_weights.shape[2]), 2).sum(axis=1, keepdims=True))
 
@@ -565,17 +559,26 @@ class SOMNet:
 
                 all_weights = new_weights
 
+                # Revert to object oriented
+                all_weights = all_weights.reshape(self.width * self.height, self.data.shape[1])
+                for n_node, node in enumerate(self.nodes_list):
+                    node.weights = all_weights[n_node]
+
+                if self.GPU:
+                    for node in self.nodes_list:
+                        node.weights = node.weights.get()
                 # ===================================================================================================================
                 if ((n_iter+1) < self.epochs):
-                    self._save_map(file_name = 'trained_som_' + str(n_iter+1) + 'epoch'+ '.npy')   # Added by I. Matute to save map after each epoch
+                    self.save_map(file_name = 'trained_som_' + str(n_iter+1) + 'epoch'+ '.npy')   # Added by I. Matute to save map after each epoch
                 # ===================================================================================================================
+                all_weights = all_weights.reshape(self.width, self.height, self.data.shape[1])
             
 
             # Revert to object oriented
             all_weights = all_weights.reshape(self.width * self.height, self.data.shape[1])
             for n_node, node in enumerate(self.nodes_list):
                 node.weights = all_weights[n_node]
-
+        
         else:
             logger.error(
                 "Training algorithm not recognized. Choose between \"online\" and \"batch\".")
