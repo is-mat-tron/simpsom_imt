@@ -306,6 +306,34 @@ class SOMNet:
         np.save(os.path.join(self.output_path, file_name),
                 np.array(weights_array))
 
+    def _save_map(self, file_name: str = "trained_som.npy") -> None:
+        """Saves the network dimensions, the pbc and nodes weights to a file.
+
+        Args:
+            file_name (str): Name of the file where the data will be saved.
+        """
+        # Revert to object-oriented  ::::::::::::::::::::::::::::::::::::::::::::::::::
+        all_weights = all_weights.reshape(self.width * self.height, self.data.shape[1])
+        for n_node, node in enumerate(self.nodes_list):
+            node.weights = all_weights[n_node]
+
+        all_weights = all_weights.reshape(self.width, self.height, self.data.shape[1])
+
+        weights_array = [[float(self.height)] * self.nodes_list[0].weights.shape[0],
+                         [float(self.width)] *
+                         self.nodes_list[0].weights.shape[0],
+                         [float(self.PBC)] * self.nodes_list[0].weights.shape[0]] + \
+                        [self._get(node.weights) for node in self.nodes_list]
+        # ::::::::::::::::::::::::: ::::::::::::::::::::::::::::::::::::::::::::::::::
+
+        if not file_name.endswith((".npy")):
+            file_name += ".npy"
+        logger.info("Map shape and weights will be saved to:\n" +
+                    os.path.join(self.output_path, file_name))
+        np.save(os.path.join(self.output_path, file_name),
+                np.array(weights_array))
+    
+
     def _update_sigma(self, n_iter: int) -> None:
         """Update the gaussian sigma.
 
@@ -538,7 +566,8 @@ class SOMNet:
                 all_weights = new_weights
 
                 # ===================================================================================================================
-                self.save_map(file_name = 'trained_som_' + str(n_iter+1) + 'epoch'+ '.npy')   # Added by I. Matute to save map after each epoch
+                if ((n_iter+1) < self.epochs):
+                    self._save_map(file_name = 'trained_som_' + str(n_iter+1) + 'epoch'+ '.npy')   # Added by I. Matute to save map after each epoch
                 # ===================================================================================================================
             
 
