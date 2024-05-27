@@ -542,8 +542,8 @@ class SOMNet:
 
                     # Revert to object oriented
                     all_weights = all_weights.reshape(self.width * self.height, self.data.shape[1])
-                        for n_node, node in enumerate(self.nodes_list):
-                            node.weights = all_weights[n_node]
+                    for n_node, node in enumerate(self.nodes_list):
+                        node.weights = all_weights[n_node]
 
                     if self.GPU:
                         for node in self.nodes_list:
