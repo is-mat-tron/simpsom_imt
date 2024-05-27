@@ -22,7 +22,7 @@ setup(
     long_description_content_type='text/markdown',
 
     url='https://github.com/fcomitani/simpsom',
-    download_url = 'https://github.com/fcomitani/simpsom/archive/'+version+'.tar.gz', 
+    download_url = 'https://github.com/is/mat/tron/simpsom_imt/archive/'+version+'.tar.gz', 
     author='Federico Comitani',
     author_email='federico.comitani@gmail.com',
 
