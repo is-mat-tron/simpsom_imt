@@ -15,7 +15,7 @@ from simpsom.neighborhoods import Neighborhoods
 from simpsom.plots import plot_map, line_plot, scatter_on_map
 from simpsom.polygons import Squares, Hexagons, Polygon
 
-import numba as nb    # Added by I. Matute (27/05/2024)
+import numba as nb    # Added by IMT (27/05/2024)
 
 
 class SOMNet:
