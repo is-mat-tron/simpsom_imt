@@ -360,9 +360,9 @@ class SOMNet:
                                            [n.weights for n in self.nodes_list]),
                                        metric=self.metric)
         bmu1 = self.xp.argmin(dists, axis=1)
-        #rows = self.xp.arange(dists.shape[0])
-        #dists[rows, bmu1] = 1e10
-        dists[bmu1] = 1e10
+        rows = self.xp.arange(dists.shape[0])
+        dists[rows, bmu1] = 1e10
+        #dists[bmu1] = 1e10
         bmu2 = self.xp.argmin(dists, axis=1)
         return (bmu1, bmu2)
 
